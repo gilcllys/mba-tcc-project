@@ -4,7 +4,7 @@ from django.urls import path, include
 
 
 router = routers.SimpleRouter()
-router.register(r'order', OrderViewSet)
+router.register(r'order_client', OrderViewSet)
 
 
 urlpatterns = router.urls
