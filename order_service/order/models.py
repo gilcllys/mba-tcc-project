@@ -13,6 +13,12 @@ class BaseModel(models.Model):
 
 
 class Order(BaseModel):
+    client_id = models.IntegerField(
+        null=False,
+        blank=False,
+        db_column='Client ID'  # Ou 'client_id' se preferir snake_case
+    )
+
     item = models.CharField(
         max_length=124,
         null=False,
