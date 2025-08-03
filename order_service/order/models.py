@@ -16,14 +16,12 @@ class Order(BaseModel):
     client_id = models.IntegerField(
         null=False,
         blank=False,
-        db_column='Client ID'  # Ou 'client_id' se preferir snake_case
+        db_column='Client ID'
     )
-
-    item = models.CharField(
-        max_length=124,
+    order_item_id = models.IntegerField(
         null=False,
         blank=False,
-        db_column='Menu Item Name'
+        db_column='Order Item ID'
     )
 
     quantity = models.IntegerField(
@@ -35,3 +33,23 @@ class Order(BaseModel):
     class Meta:
         verbose_name = "Order"
         verbose_name_plural = "Oders"
+
+
+class OrderItem(BaseModel):
+    item_name = models.CharField(
+        max_length=124,
+        null=False,
+        blank=False,
+        db_column='Menu Item Name'
+    )
+    price = models.DecimalField(
+        max_digits=10,
+        decimal_places=2,
+        null=False,
+        blank=False,
+        db_column='Item Price'
+    )
+
+    class Meta:
+        verbose_name = "Order Item"
+        verbose_name_plural = "Order Items"
