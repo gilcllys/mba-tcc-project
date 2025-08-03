@@ -36,26 +36,26 @@ export class ClientComponent implements OnInit {
     if (this.clientForm.valid) {
       const clientData = this.clientForm.value;
       console.log('Dados do cliente:', this.clientForm.value);
-      this._snackBar.open(
-        "Criado com  sucesso",
-        "Fechar",
-        {
-          duration: 3000,
-          horizontalPosition: 'center',
-          panelClass: ['snack-bar-success'],
+      this.clientService.create(clientData).subscribe({
+        next: (response) => {
+          console.log('Cliente criado com sucesso:', response);
+          this._snackBar.open(
+            "Criado com  sucesso",
+            "Fechar",
+            {
+              duration: 3000,
+              horizontalPosition: 'center',
+              panelClass: ['snack-bar-success'],
 
+            }
+
+          );
+          this.clientForm.reset();
+        },
+        error: (error) => {
+          console.error('Erro ao criar cliente:', error);
         }
-
-      );
-      // this.clientService.create(clientData).subscribe({
-      //   next: (response) => {
-      //     console.log('Cliente criado com sucesso:', response);
-      //     this.clientForm.reset();
-      //   },
-      //   error: (error) => {
-      //     console.error('Erro ao criar cliente:', error);
-      //   }
-      // });
+      });
     } else {
       console.warn('Formulário inválido');
     }
