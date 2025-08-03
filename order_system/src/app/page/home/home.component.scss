@@ -1,0 +1,46 @@
+.example-container {
+  width: 100%;
+  height: 100vh;
+  /* Ocupa a altura total da viewport */
+  display: flex;
+  flex-direction: column;
+  /* Garante que a toolbar fique no topo */
+}
+
+.sidenav {
+  width: 250px;
+  /* Largura da sua sidenav */
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  margin-left: 20px;
+  /* Permite que o conteúdo da gaveta preencha */
+}
+
+mat-drawer-content {
+  padding-left: 10px;
+}
+
+.content mat-toolbar ::ng-deep {
+  padding: 0;
+}
+
+mat-drawer {
+  background-color: antiquewhite;
+  margin-right: 20px;
+}
+
+.main-content-padding {
+  padding: 20px;
+  flex-grow: 1;
+  /* Permite que o conteúdo principal ocupe o espaço restante */
+  overflow: auto;
+  /* Adiciona scroll se o conteúdo for maior que a tela */
+}
+
+.sidenav mat-nav-list a mat-icon ::ng-deep {
+  margin-right: 10px;
+}

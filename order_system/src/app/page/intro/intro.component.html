@@ -1,0 +1,41 @@
+<!-- src/app/page/home/home.component.html -->
+<div class="welcome-container">
+  <div class="welcome-card">
+    <!-- Ícone principal do sistema (Ex: restaurante, talheres) -->
+    <mat-icon class="app-icon">restaurant</mat-icon>
+    <h1>Bem-vindo ao Sistema de Pedidos Restaurante!</h1>
+    <p class="subtitle">
+      Gerenciamento eficiente de cardápio, clientes e pedidos. Se trata do meu projeto de TCC do MBA em engenharia de
+      software da USP/ESALQ,
+      desenvolvido com Angular, Django e RabbitMQ.
+    </p>
+
+    <div class="features-grid">
+      <div class="feature-item">
+        <mat-icon class="feature-icon">menu_book</mat-icon>
+        <h3>Cardápio Dinâmico</h3>
+        <p>Gerencie e atualize seu menu em tempo real, com categorias e preços flexíveis para cada item.</p>
+      </div>
+      <div class="feature-item">
+        <mat-icon class="feature-icon">group</mat-icon>
+        <h3>Gestão Inteligente de Clientes</h3>
+        <p>Mantenha um registro organizado e acesse o histórico de pedidos de seus clientes para um atendimento
+          otimizado.</p>
+      </div>
+      <div class="feature-item">
+        <mat-icon class="feature-icon">shopping_cart</mat-icon>
+        <h3>Processamento Ágil de Pedidos</h3>
+        <p>Otimize o fluxo da cozinha com um sistema de pedidos eficiente, suportado por APIs Django e mensageria
+          RabbitMQ.</p>
+      </div>
+    </div>
+
+    <p>
+      Este projeto demonstra a integração completa de frontend moderno com backend poderoso e comunicação assíncrona.
+    </p>
+
+    <button mat-raised-button color="primary" (click)="startExploring()">
+      <mat-icon>explore</mat-icon> Explorar o Sistema
+    </button>
+  </div>
+</div>
