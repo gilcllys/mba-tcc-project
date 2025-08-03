@@ -1,0 +1,27 @@
+.botoes {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.salvar button {
+  background-color: green;
+}
+
+.cancelar button {
+  background-color: red;
+}
+
+form {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  width: 500px;
+  margin: auto;
+}
+
+.snack-bar-success {
+  background: #43a047 !important; // verde de sucesso
+  color: #fff !important;
+}
