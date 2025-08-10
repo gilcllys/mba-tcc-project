@@ -43,7 +43,7 @@ export abstract class BaseService<T> { // Use 'abstract' para que não possa ser
   // Métodos CRUD usando o tipo genérico 'T'
 
   getAll(): Observable<T[]> {
-    return this.http.get<T[]>(this.entityUrl, this.httpOptions)
+    return this.http.get<T[]>(`${this.entityUrl}/`, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
@@ -58,7 +58,8 @@ export abstract class BaseService<T> { // Use 'abstract' para que não possa ser
   }
 
   create(item: T): Observable<T> { // Item do tipo T
-    return this.http.post<T>(this.entityUrl, item, this.httpOptions)
+    console.log(this.entityUrl)
+    return this.http.post<T>(`${this.entityUrl}/`, item, this.httpOptions)
       .pipe(
         catchError(this.handleError)
       );
@@ -73,7 +74,7 @@ export abstract class BaseService<T> { // Use 'abstract' para que não possa ser
   }
 
   delete(id: string | number): Observable<any> {
-    const url = `${this.entityUrl}/${id}`;
+    const url = `${this.entityUrl}/${id}/`;
     return this.http.delete<any>(url, this.httpOptions)
       .pipe(
         catchError(this.handleError)
