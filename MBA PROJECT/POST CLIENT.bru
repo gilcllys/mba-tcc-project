@@ -1,0 +1,36 @@
+meta {
+  name: POST CLIENT
+  type: http
+  seq: 1
+}
+
+post {
+  url: http://127.0.0.1:8000/users/client/
+  body: json
+  auth: inherit
+}
+
+body:json {
+  {
+    "name": "Client 5",
+    "email": "client5@email.com"
+  }
+}
+
+tests {
+  {
+    "name": "Client 3",
+    "email": "client3@email.com"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  {
+    "name": "Client 3",
+    "email": "client3@email.com"
+  }
+}
