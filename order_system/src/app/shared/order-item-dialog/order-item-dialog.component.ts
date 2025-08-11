@@ -1,19 +1,20 @@
 import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
-import { MAT_DIALOG_DATA, MatDialogActions, MatDialogContent, MatDialogRef, MatDialogTitle } from '@angular/material/dialog';
+import { MatDialogTitle, MatDialogContent, MatDialogActions, MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { OrderItemModel } from '../../models/order_item.model';
 import { ClientModel } from '../../models/client.model';
 import { ToastrService } from 'ngx-toastr';
-import { ClientService } from '../../service/client.service';
-
+import { OrderItemService } from '../../service/order-item.service';
 export interface DialogData {
-  data: ClientModel;
+
+  data: OrderItemModel;
 }
 
 @Component({
-  selector: 'app-client-dialog',
+  selector: 'app-order-item-dialog',
   imports: [
     MatFormFieldModule,
     MatInputModule,
@@ -24,51 +25,50 @@ export interface DialogData {
     MatDialogContent,
     MatDialogActions,
   ],
-  templateUrl: './client-dialog.component.html',
-  styleUrl: './client-dialog.component.scss'
+  templateUrl: './order-item-dialog.component.html',
+  styleUrl: './order-item-dialog.component.scss'
 })
-export class ClientDialogComponent {
-  readonly dialogRef = inject(MatDialogRef<ClientDialogComponent>);
+export class OrderItemDialogComponent {
+  readonly dialogRef = inject(MatDialogRef<OrderItemDialogComponent>);
   readonly data = inject<DialogData>(MAT_DIALOG_DATA);
-  client: ClientModel = this.data.data;
-  clientForm!: FormGroup;
+  order_item: OrderItemModel = this.data.data;
+  orderItemForm!: FormGroup;
 
   constructor(
-    private clientService: ClientService,
+    private orderItemService: OrderItemService,
     private toastr: ToastrService
-  ) {
-
-  }
+  ) { }
 
   ngOnInit(): void {
-    this.clientForm = new FormGroup({
-      "name": new FormControl('', Validators.required),
-      "email": new FormControl('', [Validators.required, Validators.email])
+    this.orderItemForm = new FormGroup({
+      "item_name": new FormControl('', Validators.required),
+      "price": new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)])
     });
     this.feedForm();
   }
 
 
   onNoClick(): void {
+    this.orderItemForm.reset();
     this.dialogRef.close();
   }
 
   feedForm(): void {
-    this.clientForm.patchValue({
-      name: this.client.name,
-      email: this.client.email
+    this.orderItemForm.patchValue({
+      item_name: this.order_item.item_name,
+      price: this.order_item.price
     });
   }
 
   save(): void {
-    if (this.clientForm.valid) {
-      const updatedClient: ClientModel = {
-        id: this.client.id,
-        name: this.clientForm.value.name,
-        email: this.clientForm.value.email
+    console.log('Dados do item:', this.orderItemForm.valid);
+    if (this.orderItemForm.valid) {
+      const updatedorder_item: OrderItemModel = {
+        id: this.order_item.id,
+        item_name: this.orderItemForm.value.item_name,
+        price: this.orderItemForm.value.price
       };
-
-      this.clientService.update(updatedClient.id!, updatedClient).subscribe({
+      this.orderItemService.update(updatedorder_item.id!, updatedorder_item).subscribe({
         next: () => {
           this.toastr.success('Cliente atualizado com sucesso!', 'Sucesso', {
             closeButton: true,
@@ -84,6 +84,7 @@ export class ClientDialogComponent {
             progressBar: true,
             timeOut: 3000,
           });
+          this.dialogRef.close();
         }
       });
     }

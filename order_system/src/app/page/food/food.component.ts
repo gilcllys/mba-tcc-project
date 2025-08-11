@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -10,6 +10,8 @@ import { MatTableModule } from '@angular/material/table';
 import { OrderItemService } from '../../service/order-item.service';
 import { ToastrService } from 'ngx-toastr';
 import { OrderItemModel } from '../../models/order_item.model';
+import { OrderItemDialogComponent } from '../../shared/order-item-dialog/order-item-dialog.component';
+import { MatDialog, MatDialogModule } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-food',
@@ -30,6 +32,7 @@ export class FoodComponent {
   orderItemForm!: FormGroup;
   displayedColumns: string[] = ['id', 'nome', 'preco', 'action'];
   dataSource: OrderItemModel[] = [];
+  readonly dialog = inject(MatDialog);
 
   constructor(
     private orderItemService: OrderItemService,
@@ -67,7 +70,6 @@ export class FoodComponent {
   salvar() {
     if (this.orderItemForm.valid) {
       const orderItemData = this.orderItemForm.value;
-      console.log('Dados do cliente:', this.orderItemForm.value);
       this.orderItemService.create(orderItemData).subscribe({
         next: (response) => {
           this.orderItemForm.reset();
@@ -95,6 +97,37 @@ export class FoodComponent {
       });
 
     }
+  }
+
+  excluir(id: number) {
+    this.orderItemService.delete(id).subscribe({
+      next: () => {
+        this.toastr.success('Cliente excluído com sucesso!', 'Sucesso', {
+          closeButton: true,
+          progressBar: true,
+          timeOut: 3000,
+        });
+        this.getAllOrderItens();
+      },
+      error: (error) => {
+        console.error('Erro ao excluir cliente:', error);
+        this.toastr.error(error, 'Error', {
+          closeButton: true,
+          progressBar: true,
+          timeOut: 3000,
+        });
+      }
+    });
+  }
+
+  editar(order_item: OrderItemModel): void {
+    const dialogRef = this.dialog.open(OrderItemDialogComponent, {
+      data: { data: order_item },
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.getAllOrderItens();
+    });
   }
 
 }

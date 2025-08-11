@@ -11,15 +11,10 @@ import { MatTableModule } from '@angular/material/table';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import {
-  MAT_DIALOG_DATA,
   MatDialog,
-  MatDialogActions,
-  MatDialogClose,
-  MatDialogContent,
-  MatDialogRef,
-  MatDialogTitle,
 } from '@angular/material/dialog';
 import { ClientDialogComponent } from '../../shared/client-dialog/client-dialog.component';
+import { get } from 'http';
 
 @Component({
   selector: 'app-client',
@@ -136,24 +131,7 @@ export class ClientComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      this.clientService.update(client.id!, result).subscribe({
-        next: () => {
-          this.toastr.success('Cliente atualizado com sucesso!', 'Sucesso', {
-            closeButton: true,
-            progressBar: true,
-            timeOut: 3000,
-          });
-          this.getAllClients();
-        },
-        error: (error) => {
-          console.error('Erro ao atualizar cliente:', error);
-          this.toastr.error(error, 'Error', {
-            closeButton: true,
-            progressBar: true,
-            timeOut: 3000,
-          });
-        }
-      });
+      this.getAllClients();
     });
   }
 }

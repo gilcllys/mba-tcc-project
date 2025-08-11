@@ -1,0 +1,17 @@
+<h2 mat-dialog-title>Editar item do menu</h2>
+<mat-dialog-content>
+  <form [formGroup]="orderItemForm">
+    <mat-form-field class="name-form">
+      <mat-label>Nome do item</mat-label>
+      <input type="text" matInput placeholder="Ex. X-salada" formControlName="item_name">
+    </mat-form-field>
+    <mat-form-field class="email-form">
+      <mat-label>Preço</mat-label>
+      <input type="number" matInput placeholder="Ex. 11,50" formControlName="price">
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+<mat-dialog-actions>
+  <button class="salvar" mat-flat-button (click)="save()">Salvar</button>
+  <button class="cancelar" mat-flat-button (click)="onNoClick()">Cancelar</button>
+</mat-dialog-actions>
