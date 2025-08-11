@@ -1,12 +1,17 @@
-<h2 mat-dialog-title>Hi {{data.name}}</h2>
+<h2 mat-dialog-title>Editar o cliente</h2>
 <mat-dialog-content>
-  <p>What's your favorite animal?</p>
-  <mat-form-field>
-    <mat-label>Favorite Animal</mat-label>
-    <input matInpu />
-  </mat-form-field>
+  <form [formGroup]="clientForm">
+    <mat-form-field class="name-form">
+      <mat-label>Nome</mat-label>
+      <input type="text" matInput placeholder="Ex. Patrícia Costa" formControlName="name">
+    </mat-form-field>
+    <mat-form-field class="email-form">
+      <mat-label>Email</mat-label>
+      <input type="email" matInput placeholder="Ex. pat@example.com" formControlName="email">
+    </mat-form-field>
+  </form>
 </mat-dialog-content>
 <mat-dialog-actions>
-  <button matButton (click)="onNoClick()">No Thanks</button>
-  <button matButton cdkFocusInitial>Ok</button>
+  <button class="salvar" mat-flat-button (click)="save()">Salvar</button>
+  <button class="cancelar" mat-flat-button (click)="onNoClick()">Cancelar</button>
 </mat-dialog-actions>

@@ -71,6 +71,10 @@ export class ClientComponent implements OnInit {
     });
   }
 
+  cancelar(): void {
+    this.clientForm.reset();
+  }
+
   salvar() {
     if (this.clientForm.valid) {
       const clientData = this.clientForm.value;
@@ -132,7 +136,24 @@ export class ClientComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      this.clientService.update(client.id!, result).subscribe({
+        next: () => {
+          this.toastr.success('Cliente atualizado com sucesso!', 'Sucesso', {
+            closeButton: true,
+            progressBar: true,
+            timeOut: 3000,
+          });
+          this.getAllClients();
+        },
+        error: (error) => {
+          console.error('Erro ao atualizar cliente:', error);
+          this.toastr.error(error, 'Error', {
+            closeButton: true,
+            progressBar: true,
+            timeOut: 3000,
+          });
+        }
+      });
     });
   }
 }

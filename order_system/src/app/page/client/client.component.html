@@ -19,7 +19,7 @@
     <mat-card-actions class="salvar" [align]="'start'">
       <button (click)="salvar()" mat-flat-button>Salvar</button>
     </mat-card-actions>
-    <mat-card-actions class="cancelar" [align]="'start'">
+    <mat-card-actions (click)="cancelar()" class="cancelar" [align]="'start'">
       <button mat-flat-button>Cancelar</button>
     </mat-card-actions>
   </div>

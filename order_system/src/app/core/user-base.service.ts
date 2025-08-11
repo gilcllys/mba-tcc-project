@@ -50,7 +50,7 @@ export abstract class BaseService<T> { // Use 'abstract' para que não possa ser
   }
 
   getById(id: string | number): Observable<T> {
-    const url = `${this.entityUrl}/${id}`;
+    const url = `${this.entityUrl}/${id}/`;
     return this.http.get<T>(url, this.httpOptions)
       .pipe(
         catchError(this.handleError)
@@ -66,7 +66,7 @@ export abstract class BaseService<T> { // Use 'abstract' para que não possa ser
   }
 
   update(id: string | number, item: T): Observable<T> { // Item do tipo T
-    const url = `${this.entityUrl}/${id}`;
+    const url = `${this.entityUrl}/${id}/`;
     return this.http.put<T>(url, item, this.httpOptions)
       .pipe(
         catchError(this.handleError)

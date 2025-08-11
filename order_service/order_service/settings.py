@@ -25,7 +25,36 @@ SECRET_KEY = 'django-insecure-onmx5+uwokb3=gn6lu_^(^=$1wbht0+c6zpd(tuizt76#xk0l0
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ["*"]
+ALLOWED_HOSTS = ['*']  # ← Permite todas as hosts
+
+# ========== CONFIGURAÇÕES CORS ==========
+# ⚠️ ATENÇÃO: Esta configuração permite TODAS as origens
+# Use apenas em desenvolvimento ou com muito cuidado em produção
+
+CORS_ALLOW_ALL_ORIGINS = True  # ← Permite todas as origens
+
+# Configurações adicionais do CORS
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOWED_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+]
+
+CORS_ALLOWED_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
 
 
 # Application definition
@@ -43,6 +72,7 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',  # ← MOVA PARA O TOPO
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

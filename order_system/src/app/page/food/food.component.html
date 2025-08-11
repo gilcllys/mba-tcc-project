@@ -1,1 +1,74 @@
-<p>food works!</p>
+<mat-card appearance="outlined" class="cadastrar-cliente">
+  <mat-card-header>
+    <mat-card-title> Cadastrar item cardápio</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+    <form [formGroup]="orderItemForm">
+      <mat-form-field class="name-form">
+        <mat-label>Nome do item</mat-label>
+        <input type="text" matInput placeholder="Ex. X-salada" formControlName="item_name">
+      </mat-form-field>
+      <mat-form-field class="email-form">
+        <mat-label>Preço</mat-label>
+        <input type="number" matInput placeholder="Ex. 11,50" formControlName="price">
+      </mat-form-field>
+    </form>
+  </mat-card-content>
+
+  <div class="botoes">
+    <mat-card-actions class="salvar" [align]="'start'">
+      <button (click)="salvar()" mat-flat-button>Salvar</button>
+    </mat-card-actions>
+    <mat-card-actions class="cancelar" [align]="'start'">
+      <button (click)="cancelar()" mat-flat-button>Cancelar</button>
+    </mat-card-actions>
+  </div>
+</mat-card>
+
+<mat-card appearance="outlined" class="clientes-cadastrados">
+  <mat-card-header>
+    <mat-card-title> Itens do menu cadastrados</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Id </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef> Nome </th>
+        <td mat-cell *matCellDef="let element"> {{element.item_name}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="preco">
+        <th mat-header-cell *matHeaderCellDef> Email </th>
+        <td mat-cell *matCellDef="let element"> {{element.price}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Ações </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu de opções">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>edit</mat-icon>
+              <span>Editar</span>
+            </button>
+            <button mat-menu-item>
+              <mat-icon>delete</mat-icon>
+              <span>Excluir</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card-content>
+</mat-card>
