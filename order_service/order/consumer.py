@@ -6,7 +6,8 @@ from order.models import Order
 def callback(ch, method, properties, body):
     order_data = json.loads(body)
     Order.objects.create(
-        item=order_data['item'],
+        client_id=order_data['client_id'],
+        order_item_id=order_data['order_item_id'],
         quantity=order_data['quantity']
     )
     print("Pedido salvo:", order_data)

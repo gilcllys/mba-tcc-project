@@ -1,0 +1,29 @@
+meta {
+  name: POST ORDER ITEM copy
+  type: http
+  seq: 6
+}
+
+get {
+  url: http://127.0.0.1:8081/order/order_item/
+  body: json
+  auth: inherit
+}
+
+tests {
+  {
+    "name": "Client 3",
+    "email": "client3@email.com"
+  }
+}
+
+settings {
+  encodeUrl: true
+}
+
+docs {
+  {
+    "name": "Client 3",
+    "email": "client3@email.com"
+  }
+}
