@@ -4,10 +4,14 @@ meta {
   seq: 6
 }
 
-get {
-  url: http://127.0.0.1:8081/order/order_item/
+post {
+  url: http://127.0.0.1:8081/order/order_item/auto_complete_order_items/?name
   body: json
   auth: inherit
+}
+
+params:query {
+  name: 
 }
 
 tests {

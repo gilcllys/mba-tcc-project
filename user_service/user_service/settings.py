@@ -11,6 +11,14 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+
+def ENV(key, default=None):
+    """Função para obter variáveis de ambiente com valor padrão."""
+    return os.getenv(key, default)
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,7 +28,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-%c(49+udatql47cho4_kbwm#ijo+28_g%n5x!=#zl-s2ice18f'
+SECRET_KEY = ENV(
+    'SECRET_KEY', 'django-insecure-%c(49+udatql47cho4_kbwm#ijo+28_g%n5x!=#zl-s2ice18f')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -71,13 +80,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'corsheaders',  # ✅ Já está configurado
+    'corsheaders',
     'rest_framework',
     'users.apps.UsersConfig'
 ]
 
 MIDDLEWARE = [
-    'corsheaders.middleware.CorsMiddleware',  # ← MOVA PARA O TOPO
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -111,14 +120,16 @@ WSGI_APPLICATION = 'user_service.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
+load_dotenv(os.path.join(BASE_DIR, '.env'))
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'user_database',
-        'USER': 'postgres',
-        'PASSWORD': '123456',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': ENV('DB_NAME', 'user_database'),
+        'USER': ENV('DB_USER', 'postgres'),
+        'PASSWORD': ENV('DB_PASSWORD', '123456'),
+        'HOST': ENV('DB_HOST', 'localhost'),
+        'PORT': ENV('DB_PORT', '5432'),
     }
 }
 
