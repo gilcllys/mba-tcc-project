@@ -1,0 +1,63 @@
+version: '3.9'
+
+services:
+  user_db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: user_database
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5433:5432"
+    volumes:
+      - user_db_data:/var/lib/postgresql/data
+
+  order_db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: order_database
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 123456
+    ports:
+      - "5434:5432"
+    volumes:
+      - order_db_data:/var/lib/postgresql/data
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+
+  user_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.user_service
+    env_file:
+      - ./user_service/.env
+    depends_on:
+      - user_db
+      - rabbitmq
+    ports:
+      - "8000:8000"
+
+  order_service:
+    build:
+      context: .
+      dockerfile: Dockerfile.order_service
+    env_file:
+      - ./order_service/.env
+    environment:
+      DJANGO_SETTINGS_MODULE: order_service.settings  # ADD THIS LINE
+    depends_on:
+      - order_db
+      - rabbitmq
+    ports:
+      - "8081:8081"
+
+volumes:
+  user_db_data:
+  order_db_data:

@@ -11,16 +11,25 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 """
 
 from pathlib import Path
+from dotenv import load_dotenv
+import os
+
+
+def ENV(key, default=None):
+    return os.getenv(key, default)
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+load_dotenv(os.path.join(BASE_DIR, '.env'))
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-onmx5+uwokb3=gn6lu_^(^=$1wbht0+c6zpd(tuizt76#xk0l0'
+SECRET_KEY = ENV(
+    'SECRET_KEY', 'django-insecure-onmx5+uwokb3=gn6lu_^(^=$1wbht0+c6zpd(tuizt76#xk0l0')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -109,11 +118,11 @@ WSGI_APPLICATION = 'order_service.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'order_database',
-        'USER': 'postgres',
-        'PASSWORD': '123456',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': ENV('DB_NAME', 'order_database'),
+        'USER': ENV('DB_USER', 'postgres'),
+        'PASSWORD': ENV('DB_PASSWORD', '123456'),
+        'HOST': ENV('DB_HOST', 'localhost'),
+        'PORT': ENV('DB_PORT', '5432'),
     }
 }
 

@@ -1,0 +1,20 @@
+# Dockerfile.user_service
+# Define a imagem base para o serviço de usuário
+FROM python:3.10-slim
+
+# Configura o diretório de trabalho dentro do contêiner
+WORKDIR /app
+
+# Copia os arquivos do serviço de usuário e dependências
+COPY user_service/ ./user_service/
+COPY requirements.txt ./
+
+# Atualiza o pip e instala as dependências do Python
+RUN pip install --upgrade pip && pip install -r requirements.txt
+
+# Configura o diretório de trabalho para o aplicativo
+WORKDIR /app/user_service
+
+# Comando para executar migrações e iniciar o servidor
+# Adiciona verificação de disponibilidade do banco de dados
+CMD ["sh", "-c", "while ! nc -z user_db 5432; do sleep 1; done; python manage.py migrate && python manage.py runserver"]

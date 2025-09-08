@@ -1,6 +1,6 @@
+from order.models import Order
 import pika
 import json
-from order.models import Order
 
 
 def callback(ch, method, properties, body):

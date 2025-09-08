@@ -58,3 +58,4 @@ htmlcov/
 
 # Arquivos de ambiente
 .env*
+order_service/.env

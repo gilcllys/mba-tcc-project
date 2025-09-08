@@ -1,0 +1,15 @@
+# Dockerfile para order_service
+FROM python:3.10-slim
+
+WORKDIR /app
+
+COPY order_service/ ./order_service/
+COPY requirements.txt ./
+COPY start_order_service.sh ./
+
+RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN chmod +x /app/start_order_service.sh
+
+WORKDIR /app/order_service
+
+CMD ["/app/start_order_service.sh"]
