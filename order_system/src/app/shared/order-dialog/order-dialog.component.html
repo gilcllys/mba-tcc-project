@@ -1,0 +1,41 @@
+<h1 mat-dialog-title>Editar Pedido</h1>
+<div mat-dialog-content>
+  <form [formGroup]="orderForm">
+    <mat-form-field class="full-width">
+      <mat-label>Cliente</mat-label>
+      <input type="text"
+             matInput
+             placeholder="Selecione um cliente"
+             formControlName="client"
+             [matAutocomplete]="autoCliente">
+      <mat-autocomplete #autoCliente="matAutocomplete" [displayWith]="displayClientFn">
+        <mat-option *ngFor="let cliente of filteredClientes | async" [value]="cliente">
+          {{cliente.name}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Item do menu</mat-label>
+      <input type="text"
+             matInput
+             placeholder="Selecione um item"
+             formControlName="order_item"
+             [matAutocomplete]="autoItem">
+      <mat-autocomplete #autoItem="matAutocomplete" [displayWith]="displayItemFn">
+        <mat-option *ngFor="let item of filteredItems | async" [value]="item">
+          {{item.item_name}} - R$ {{item.price}}
+        </mat-option>
+      </mat-autocomplete>
+    </mat-form-field>
+
+    <mat-form-field class="full-width">
+      <mat-label>Quantidade</mat-label>
+      <input type="number" matInput formControlName="quantity">
+    </mat-form-field>
+  </form>
+</div>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()">Cancelar</button>
+  <button mat-button [mat-dialog-close]="true" (click)="salvar()" cdkFocusInitial>Salvar</button>
+</div>

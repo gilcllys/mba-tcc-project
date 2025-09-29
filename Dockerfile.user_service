@@ -6,15 +6,15 @@ FROM python:3.10-slim
 WORKDIR /app
 
 # Copia os arquivos do serviço de usuário e dependências
-COPY user_service/ ./user_service/
-COPY requirements.txt ./
+COPY user_service/ /app/
+COPY requirements.txt /app/
 
 # Atualiza o pip e instala as dependências do Python
-RUN pip install --upgrade pip && pip install -r requirements.txt
+RUN pip install --upgrade pip && pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r requirements.txt
 
 # Configura o diretório de trabalho para o aplicativo
-WORKDIR /app/user_service
+ENV DJANGO_SETTINGS_MODULE=user_service.settings
 
 # Comando para executar migrações e iniciar o servidor
 # Adiciona verificação de disponibilidade do banco de dados
-CMD ["sh", "-c", "while ! nc -z user_db 5432; do sleep 1; done; python manage.py migrate && python manage.py runserver"]
+CMD ["sh", "-c", "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"]

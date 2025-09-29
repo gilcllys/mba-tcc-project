@@ -34,7 +34,8 @@ SECRET_KEY = ENV(
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']  # ← Permite todas as hosts
+# Allow all hosts for Docker container communication
+ALLOWED_HOSTS = ['*']
 
 # ========== CONFIGURAÇÕES CORS ==========
 # ⚠️ ATENÇÃO: Esta configuração permite TODAS as origens

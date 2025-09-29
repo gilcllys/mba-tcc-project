@@ -1,6 +1,7 @@
 import { HttpClient, HttpErrorResponse, HttpHeaders } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs'; // Importação correta de Observable
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
+import { Observable, throwError, of } from 'rxjs'; // Importação correta de Observable
 import { catchError } from 'rxjs/operators'; // Importação correta de operators
 
 // Importante: Remover 'providedIn: root' de classes base abstratas.
@@ -11,7 +12,7 @@ export abstract class BaseService<T> { // Use 'abstract' para que não possa ser
 
   // A URL base agora é um parâmetro do construtor, ou pode ser uma constante global.
   // Vamos mantê-la como um padrão, mas permitir que o serviço filho a configure.
-  protected baseUrl: string;
+  protected baseUrl: string = '';
 
   // A URL específica da entidade (ex: /users, /clients) será definida pelo serviço filho
   protected entityUrl: string = '';
@@ -28,21 +29,34 @@ export abstract class BaseService<T> { // Use 'abstract' para que não possa ser
    * Construtor para o BaseService.
    * @param http O serviço HttpClient do Angular.
    * @param endpoint O segmento do caminho da URL específico para esta entidade (ex: 'users', 'clients').
-   * @param customBaseUrl Opcional: uma URL base personalizada para a API, se for diferente da padrão.
+   * @param port A porta do serviço.
+   * @param customBaseUrl Opcional: uma URL base personalizada para a API.
    */
   constructor(
     protected http: HttpClient,
     protected endpoint: string,
-    protected port: string, // O endpoint específico da API (ex: 'users', 'clients')
-    customBaseUrl: string = 'http://127.0.0.1' // URL base padrão, pode ser sobrescrita
+    protected port: string,
+    customBaseUrl: string = '',
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.baseUrl = customBaseUrl;
-    this.entityUrl = `${this.baseUrl}:${this.port}/${endpoint}`; // Concatena a base com o endpoint específico
+    // Se customBaseUrl for fornecida, usa ela, senão usa host.docker.internal com as portas mapeadas
+    if (customBaseUrl) {
+      this.baseUrl = customBaseUrl;
+      this.entityUrl = `${this.baseUrl}:${this.port}/${endpoint}`;
+    } else {
+      // Usa localhost com as portas mapeadas do docker-compose
+      this.entityUrl = `http://localhost:${this.port}/${this.endpoint}`;
+    }
   }
 
   // Métodos CRUD usando o tipo genérico 'T'
 
   getAll(): Observable<T[]> {
+    // Só faz a requisição se estivermos no browser (não no SSR)
+    if (!isPlatformBrowser(this.platformId)) {
+      return of([]); // Retorna array vazio durante SSR
+    }
+    
     return this.http.get<T[]>(`${this.entityUrl}/`, this.httpOptions)
       .pipe(
         catchError(this.handleError)
@@ -84,7 +98,8 @@ export abstract class BaseService<T> { // Use 'abstract' para que não possa ser
   // Método genérico para tratamento de erros HTTP (mantido igual)
   protected handleError(error: HttpErrorResponse) {
     let errorMessage = 'Um erro desconhecido ocorreu!';
-    if (error.error instanceof ErrorEvent) {
+    // Verificação mais segura que funciona tanto no browser quanto no SSR
+    if (error.error && typeof error.error === 'object' && 'message' in error.error) {
       errorMessage = `Erro: ${error.error.message}`;
     } else {
       errorMessage = `Código do erro: ${error.status}\nMensagem: ${error.message}`;

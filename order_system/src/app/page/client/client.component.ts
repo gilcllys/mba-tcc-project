@@ -1,4 +1,5 @@
-import { Component, inject, OnInit } from '@angular/core';
+import { Component, inject, OnInit, AfterViewInit, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { MatButtonModule } from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
@@ -31,7 +32,7 @@ import { get } from 'http';
   templateUrl: './client.component.html',
   styleUrl: './client.component.scss'
 })
-export class ClientComponent implements OnInit {
+export class ClientComponent implements OnInit, AfterViewInit {
   clientForm!: FormGroup;
   displayedColumns: string[] = ['id', 'nome', 'email', 'action'];
   dataSource: ClientModel[] = [];
@@ -39,15 +40,32 @@ export class ClientComponent implements OnInit {
 
   constructor(
     private clientService: ClientService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   ngOnInit(): void {
-    this.getAllClients();
+    // Só carrega dados inicialmente se não estiver no SSR
+    if (isPlatformBrowser(this.platformId)) {
+      this.getAllClients();
+    }
+    
     this.clientForm = new FormGroup({
       "name": new FormControl('', Validators.required),
       "email": new FormControl('', [Validators.required, Validators.email])
     });
+  }
+
+  ngAfterViewInit(): void {
+    // Garante que os dados sejam carregados no browser após a view estar pronta
+    if (isPlatformBrowser(this.platformId)) {
+      // Pequeno delay para garantir que o DOM esteja estável
+      setTimeout(() => {
+        if (this.dataSource.length === 0) {
+          this.getAllClients();
+        }
+      }, 100);
+    }
   }
 
   getAllClients() {

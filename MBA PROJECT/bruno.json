@@ -1,9 +1,0 @@
-{
-  "version": "1",
-  "name": "MBA PROJECT",
-  "type": "collection",
-  "ignore": [
-    "node_modules",
-    ".git"
-  ]
-}

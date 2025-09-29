@@ -1,4 +1,5 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, OnInit, AfterViewInit, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatCardModule } from '@angular/material/card';
@@ -28,7 +29,7 @@ import { MatDialog, MatDialogModule } from '@angular/material/dialog';
   templateUrl: './food.component.html',
   styleUrl: './food.component.scss'
 })
-export class FoodComponent {
+export class FoodComponent implements OnInit, AfterViewInit {
   orderItemForm!: FormGroup;
   displayedColumns: string[] = ['id', 'nome', 'preco', 'action'];
   dataSource: OrderItemModel[] = [];
@@ -36,15 +37,32 @@ export class FoodComponent {
 
   constructor(
     private orderItemService: OrderItemService,
-    private toastr: ToastrService
+    private toastr: ToastrService,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) { }
 
   ngOnInit(): void {
-    this.getAllOrderItens();
+    // Só carrega dados inicialmente se não estiver no SSR
+    if (isPlatformBrowser(this.platformId)) {
+      this.getAllOrderItens();
+    }
+    
     this.orderItemForm = new FormGroup({
       "item_name": new FormControl('', Validators.required),
       "price": new FormControl('', [Validators.required, Validators.pattern(/^\d+(\.\d{1,2})?$/)])
     });
+  }
+
+  ngAfterViewInit(): void {
+    // Garante que os dados sejam carregados no browser após a view estar pronta
+    if (isPlatformBrowser(this.platformId)) {
+      // Pequeno delay para garantir que o DOM esteja estável
+      setTimeout(() => {
+        if (this.dataSource.length === 0) {
+          this.getAllOrderItens();
+        }
+      }, 100);
+    }
   }
 
   cancelar() {

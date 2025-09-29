@@ -1,30 +1,108 @@
 <mat-card appearance="outlined" class="cadastrar-cliente">
   <mat-card-header>
     <mat-card-title> Fazer o pedido</mat-card-title>
+    <mat-card-subtitle>
+      <button mat-icon-button (click)="refreshData()" matTooltip="Recarregar dados">
+        <mat-icon>refresh</mat-icon>
+      </button>
+    </mat-card-subtitle>
   </mat-card-header>
   <mat-card-content>
     <form [formGroup]="orderForm">
       <mat-form-field class="name-form">
         <mat-label>Cliente</mat-label>
-        <input type="text" matInput placeholder="Ex. Patrícia Costa" formControlName="client">
+        <input type="text"
+               matInput
+               placeholder="Ex. Patrícia Costa"
+               formControlName="client"
+               [matAutocomplete]="autoCliente">
+        <mat-autocomplete #autoCliente="matAutocomplete" [displayWith]="displayClientFn">
+          <mat-option *ngFor="let cliente of filteredClientes | async" [value]="cliente">
+            {{cliente.name}}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
+
       <mat-form-field class="email-form">
         <mat-label>Item do menu</mat-label>
-        <input type="email" matInput placeholder="Ex. pat@example.com" formControlName="order_item">
+        <input type="text"
+               matInput
+               placeholder="Ex. X-salada"
+               formControlName="order_item"
+               [matAutocomplete]="autoItem">
+        <mat-autocomplete #autoItem="matAutocomplete" [displayWith]="displayItemFn">
+          <mat-option *ngFor="let item of filteredItems | async" [value]="item">
+            {{item.item_name}} - R$ {{item.price}}
+          </mat-option>
+        </mat-autocomplete>
       </mat-form-field>
-      <mat-form-field class="email-form">
+
+      <mat-form-field class="quantity-form">
         <mat-label>Quantidade</mat-label>
-        <input type="email" matInput placeholder="Ex. pat@example.com" formControlName="quantity">
+        <input type="number" matInput placeholder="Ex. 2" formControlName="quantity">
       </mat-form-field>
     </form>
   </mat-card-content>
 
   <div class="botoes">
     <mat-card-actions class="salvar" [align]="'start'">
-      <button mat-flat-button>Salvar</button>
+      <button (click)="salvar()" mat-flat-button color="primary">Salvar</button>
     </mat-card-actions>
     <mat-card-actions class="cancelar" [align]="'start'">
-      <button mat-flat-button>Cancelar</button>
+      <button (click)="cancelar()" mat-flat-button color="warn">Cancelar</button>
     </mat-card-actions>
   </div>
+</mat-card>
+
+<mat-card appearance="outlined" class="pedidos-cadastrados">
+  <mat-card-header>
+    <mat-card-title> Pedidos realizados</mat-card-title>
+  </mat-card-header>
+  <mat-card-content>
+
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef> Id </th>
+        <td mat-cell *matCellDef="let element"> {{element.id}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="cliente">
+        <th mat-header-cell *matHeaderCellDef> Cliente </th>
+        <td mat-cell *matCellDef="let element"> {{getClientName(element.client_id)}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="item">
+        <th mat-header-cell *matHeaderCellDef> Item do Menu </th>
+        <td mat-cell *matCellDef="let element"> {{getItemName(element.order_item_id)}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="quantidade">
+        <th mat-header-cell *matHeaderCellDef> Quantidade </th>
+        <td mat-cell *matCellDef="let element"> {{element.quantity}} </td>
+      </ng-container>
+
+      <ng-container matColumnDef="action">
+        <th mat-header-cell *matHeaderCellDef> Ações </th>
+        <td mat-cell *matCellDef="let element">
+          <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Menu de opções">
+            <mat-icon>more_vert</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item (click)="editar(element)">
+              <mat-icon>edit</mat-icon>
+              <span>Editar</span>
+            </button>
+            <button mat-menu-item (click)="excluir(element.id)">
+              <mat-icon>delete</mat-icon>
+              <span>Excluir</span>
+            </button>
+          </mat-menu>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </mat-card-content>
 </mat-card>

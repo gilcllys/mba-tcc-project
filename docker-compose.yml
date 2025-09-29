@@ -1,5 +1,3 @@
-version: '3.9'
-
 services:
   user_db:
     image: postgres:15
@@ -31,6 +29,8 @@ services:
     environment:
       RABBITMQ_DEFAULT_USER: guest
       RABBITMQ_DEFAULT_PASS: guest
+    volumes:
+      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
 
   user_service:
     build:
@@ -57,6 +57,18 @@ services:
       - rabbitmq
     ports:
       - "8081:8081"
+
+  order_system:
+    build:
+      context: ./order_system
+      dockerfile: Dockerfile
+    ports:
+      - "4200:4200"
+    depends_on:
+      - order_service
+      - user_service
+    environment:
+      - NODE_ENV=development
 
 volumes:
   user_db_data:

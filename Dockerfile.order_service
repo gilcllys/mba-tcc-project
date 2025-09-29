@@ -3,13 +3,13 @@ FROM python:3.10-slim
 
 WORKDIR /app
 
-COPY order_service/ ./order_service/
-COPY requirements.txt ./
-COPY start_order_service.sh ./
+COPY order_service/ /app/
+COPY requirements.txt /app/
 
-RUN pip install --upgrade pip && pip install -r requirements.txt
-RUN chmod +x /app/start_order_service.sh
+RUN pip install --upgrade pip && pip install --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org -r /app/requirements.txt
 
-WORKDIR /app/order_service
+# Variáveis de ambiente para Django
+ENV DJANGO_SETTINGS_MODULE=order_service.settings
 
-CMD ["/app/start_order_service.sh"]
+# Comando para executar o script que gerencia Django + Consumer
+CMD ["python", "start_services.py"]
